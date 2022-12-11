@@ -24,8 +24,9 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      // home: const MyHomePage(title: 'Flutter Demo Home Page'),
       // home: const Echo(text: 'Hello World!'),
+      home: const GetStateObjectRoute()
     );
   }
 }
@@ -55,6 +56,32 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState(){
     super.initState();
     _counter = widget.initValue;
+  }
+  @override
+  void didUpdateWidget(MyHomePage oldWidget){
+    super.didUpdateWidget(oldWidget);
+    print("didUpdateWidget ");
+  }
+  @override
+  void deactivate(){
+    super.deactivate();
+    print("deactivate");
+  }
+  @override
+  void dispose(){
+    super.dispose();
+    print("dispose");
+  }
+
+  @override
+  void reassemble() {
+    super.reassemble();
+    print("reassemble");
+  }
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    print("didChangeDependencies");
   }
 
   void _incrementCounter() {
@@ -138,5 +165,99 @@ class Echo extends StatelessWidget {
        child: Text(text),
       )
     );
+  }
+}
+
+class GetStateObjectRoute extends StatefulWidget {
+  const GetStateObjectRoute({Key? key}) : super(key: key);
+
+  @override
+  State<GetStateObjectRoute> createState() => _GetStateObjectRouteState();
+}
+/**
+ * // https://book.flutterchina.club/chapter2/flutter_widget_intro.html#_2-2-7-%E5%9C%A8-widget-%E6%A0%91%E4%B8%AD%E8%8E%B7%E5%8F%96state%E5%AF%B9%E8%B1%A1
+ * 1. 在widget树中获取State对象
+ * 2. 通过GlobalKey获取State对象
+ */
+
+class _GetStateObjectRouteState extends State<GetStateObjectRoute> {
+  //通过GlobalKey获取State对象
+  static final GlobalKey<ScaffoldState> _globalKey= GlobalKey();
+  // 在widget树中获取State对象
+  @override
+  Widget build(BuildContext context){
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("子数中获取State对象"),
+      ),
+      key: _globalKey,
+      body: Center(
+        child: Column(
+          children: [
+            Builder(builder: (context){
+              return ElevatedButton(
+              onPressed: (){
+                ScaffoldState state = context.findAncestorStateOfType<ScaffoldState>()!;
+                state.openDrawer();
+              },
+              child: const Text("打开抽屉菜单1"),
+            );
+            }),
+            Builder(builder: (context){
+              return ElevatedButton(
+                  onPressed: (){
+                    ScaffoldState state = Scaffold.of(context);
+                    state.openDrawer();
+                  },
+                  child: const Text("打开抽屉菜单2"),);
+            }),
+            Builder(builder: (context){
+              return ElevatedButton(
+                  onPressed: (){
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text("this is snackBar"),
+                        backgroundColor: Colors.cyan,
+                      ),
+                    );
+                  },
+                  child: const Text("显示SnackBar"));
+            }),
+            Builder(builder: (context){
+                return ElevatedButton(
+                  onPressed: (){
+                    _globalKey.currentState!.openDrawer();
+                  },
+                  child: const Text("打开抽屉菜单2"),);
+            }),
+          ],
+        ),
+      ),
+      drawer:const Drawer(),
+    );
+  }
+}
+
+class CustomWidget extends LeafRenderObjectWidget{
+  @override
+  RenderObject createRenderObject(BuildContext context) {
+    return RenderCustomObject();
+  }
+  @override
+  void updateRenderObject(BuildContext context, RenderCustomObject  renderObject) {
+    // 更新 RenderObject
+    super.updateRenderObject(context, renderObject);
+  }
+}
+
+class RenderCustomObject extends RenderBox{
+
+  @override
+  void performLayout(){
+    // 实现布局逻辑
+  }
+  @override
+  void paint(PaintingContext context, Offset offset) {
+    // 实现绘制
   }
 }
