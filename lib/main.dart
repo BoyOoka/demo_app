@@ -13,6 +13,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
+      initialRoute: "/",
       theme: ThemeData(
         // This is the theme of your application.
         //
@@ -26,11 +27,27 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       // home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      onGenerateRoute:(RouteSettings settings){
+        return MaterialPageRoute(builder: (context){
+          String? routeName = settings.name;
+          // 如果访问的路由页需要登录，但当前未登录，则直接返回登录页路由，
+          // 引导用户登录；其他情况则正常打开路由。
+          print("open page $routeName");
+          return TipRoute(text: "页面没找到");
+        });
+      },
+      //注册路由
+      routes: {
+        "new_page": (context) => NewRoute(),
+        "page_2": (context) => EchoRoute(),
+        "/": (context) => const MyHomePage(title: "Futter Demo Home Page"),
+      },
+
       // home: const Echo(text: 'Hello World!'),
       // home: const GetStateObjectRoute()
       // home: TapboxA(),
       // home: ParentWidget(),
-      home: ParentWidgetC(),
+      // home: ParentWidgetC(),
     );
   }
 }
@@ -140,6 +157,24 @@ class _MyHomePageState extends State<MyHomePage> {
               '$_counter',
               style: Theme.of(context).textTheme.headline4,
             ),
+            TextButton(onPressed: (){
+              //通过命名路由打开页面
+              // Navigator.pushNamed(context, "new_page");
+              Navigator.pushNamed(context, "page_2", arguments:"hi");
+              // Navigator.push(context,
+              //     MaterialPageRoute(builder: (context){
+              //       return NewRoute();
+              //     }));
+            },
+                child: const Text("open new route")),
+            TextButton(onPressed: (){
+              Navigator.push(context,
+                MaterialPageRoute(builder: (context){
+                  return RouterTestRoute();
+                })
+              );
+            },
+                child: Text("打开"))
           ],
         ),
       ),
@@ -440,6 +475,92 @@ class _TapboxCState extends State<TapboxC>{
             style: TextStyle(fontSize: 32.0, color: Colors.white),
           ),
         ),
+      ),
+    );
+  }
+}
+
+class NewRoute extends StatelessWidget{
+  @override
+  Widget build(BuildContext context){
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("New route"),
+      ),
+      body: const Center(
+        child: Text("This is new route"),
+      ),
+    );
+  }
+}
+
+class TipRoute extends StatelessWidget{
+  TipRoute({
+      Key? key,
+      required this.text,
+  }) : super(key: key);
+  final String text;
+
+  @override
+  Widget build(BuildContext context){
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("提示"),
+      ),
+      body: Padding(
+        padding: EdgeInsets.all(18),
+        child: Center(
+          child: Column(
+            children: <Widget>[
+              Text(text),
+              ElevatedButton(onPressed: () => Navigator.pop(context, "我是返回值")
+                  , child: Text("返回"))
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class RouterTestRoute extends StatelessWidget{
+
+  @override
+  Widget build(BuildContext context){
+    return Center(
+      child: ElevatedButton(
+        onPressed: () async{
+          var result = await Navigator.push(context,
+              MaterialPageRoute(builder: (context){
+                return TipRoute(text: "我是提示-----");
+              }));
+          print("路由返回值：$result");
+        },
+        child: Text("打开提示页"),
+
+      ),
+    );
+  }
+}
+
+class EchoRoute extends StatelessWidget{
+  @override
+  Widget build(BuildContext context){
+    var args=ModalRoute.of(context)?.settings.arguments;
+    Object? text;
+    if(args != null){
+      text = args.toString();
+    }else{
+      text = "this is text";
+    }
+    print(text);
+    print(args.toString());
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("New route"),
+      ),
+      body: const Center(
+        child: Text("tewt"),
       ),
     );
   }
