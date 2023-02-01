@@ -174,7 +174,10 @@ class _MyHomePageState extends State<MyHomePage> {
                 })
               );
             },
-                child: Text("打开"))
+                child: const Text("打开")),
+            Image.asset("pic1.jpg"), // [Image.network] and [Image.asset] respectively
+            // Image.asset('icons/heart.png', package: 'my_icons'),
+            Image.network("http://47.94.214.38/static/images/favicon.png")
           ],
         ),
       ),
