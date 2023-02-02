@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:developer';
 
 
 void main() {
@@ -113,6 +114,7 @@ class _MyHomePageState extends State<MyHomePage> {
       // _counter without calling setState(), then the build method would not be
       // called again, and so nothing would appear to happen.
       _counter++;
+      // debugger(when: _counter >= 10);
     });
   }
 
@@ -175,9 +177,9 @@ class _MyHomePageState extends State<MyHomePage> {
               );
             },
                 child: const Text("打开")),
-            Image.asset("pic1.jpg"), // [Image.network] and [Image.asset] respectively
+            Image.asset("assets/pic1.jpg"), // [Image.network] and [Image.asset] respectively
             // Image.asset('icons/heart.png', package: 'my_icons'),
-            Image.network("http://47.94.214.38/static/images/favicon.png")
+            // Image.network("http://47.94.214.38/static/images/favicon.png")
           ],
         ),
       ),
