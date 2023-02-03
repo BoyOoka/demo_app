@@ -41,6 +41,7 @@ class MyApp extends StatelessWidget {
       routes: {
         "new_page": (context) => NewRoute(),
         "page_2": (context) => EchoRoute(),
+        "text_page": (context) => TextRote(),
         "/": (context) => const MyHomePage(title: "Futter Demo Home Page"),
       },
 
@@ -180,6 +181,9 @@ class _MyHomePageState extends State<MyHomePage> {
             Image.asset("assets/pic1.jpg"), // [Image.network] and [Image.asset] respectively
             // Image.asset('icons/heart.png', package: 'my_icons'),
             // Image.network("http://47.94.214.38/static/images/favicon.png")
+            TextButton(onPressed: (){
+              Navigator.pushNamed(context, "text_page");
+            }, child: const Text("基础组件"))
           ],
         ),
       ),
@@ -569,4 +573,46 @@ class EchoRoute extends StatelessWidget{
       ),
     );
   }
+}
+
+
+class TextRote extends StatelessWidget{
+
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("基础组件"),
+        backgroundColor: Colors.green,
+      ),
+      body: Center(
+            child: Column(
+            children: const <Widget>[
+                Text("Hello world",
+                    textAlign: TextAlign.left,
+                  ),
+                Text("Hello world! I'm Jack. ",
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis),
+                Text("Hello world",
+                  textScaleFactor: 1.5,
+                ),
+              Text("Hello world",
+                style: TextStyle(
+                    color: Colors.blue,
+                    fontSize: 18.0,
+                    height: 1.2,
+                    fontFamily: "Courier",
+                    backgroundColor: Colors.yellow,
+                    decoration:TextDecoration.underline,
+                    decorationStyle: TextDecorationStyle.dashed
+                ),
+              )
+            ],
+            ),
+      ),
+      );
+  }
+  
 }
